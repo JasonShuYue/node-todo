@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "commander": "^9.1.0",
-    "inquirer": "^7.0.0"
+    "inquirer": "^8.2.2"
   },
   "devDependencies": {
     "jest": "^24.9.0"
