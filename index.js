@@ -2,33 +2,19 @@ const homeDir = require("os").homedir();
 const home = process.env.HOME || homeDir;
 const path = require("path");
 const fs = require("fs");
+const db = require("./db");
 
 const dbPath = path.join(home, ".todo");
 
-module.exports.add = (title) => {
+module.exports.add = async (title) => {
   // 读之前的任务
-  fs.readFile(dbPath, { flag: "a+" }, (err, data) => {
-    if (err) {
-      console.log(err);
-    } else {
-      let list = [];
-      try {
-        list = JSON.parse(data.toString());
-      } catch (err2) {
-        list = [];
-      }
-      const task = {
-        name: title,
-        done: false,
-      };
-      list.push(task);
+  const list = await db.read();
 
-      const string = JSON.stringify(list);
-
-      fs.writeFile(dbPath, string + "\n", (err3) => {
-        console.log(err3);
-      });
-    }
-    console.log("final:", data.toString());
+  // 往里面添加一个任务
+  list.push({
+    name: title,
+    done: false,
   });
+  // 存储任务到文件
+  await db.write(list);
 };
